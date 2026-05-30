@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tubestead.Api/Tubestead.Api.csproj" />
+    <Project Path="src/Tubestead.Domain/Tubestead.Domain.csproj" />
+    <Project Path="src/Tubestead.Infrastructure/Tubestead.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tubestead.Tests/Tubestead.Tests.csproj" />
+  </Folder>
+</Solution>

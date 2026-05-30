@@ -1,0 +1,39 @@
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ---- Node / Vite ----
+node_modules/
+client/dist/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ---- App data / media (never commit) ----
+/data/
+/media/
+**/wwwroot/app/
+**/wwwroot/index.html
+
+# ---- Secrets / env ----
+.env
+.env.*
+!.env.example
+*.pfx
+appsettings.*.local.json
+secrets.json
+
+# ---- Editor / OS ----
+.idea/
+.DS_Store
+Thumbs.db
+*.log
