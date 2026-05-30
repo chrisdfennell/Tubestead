@@ -8,10 +8,11 @@ you run on a Windows box or a NAS.
 This is a **host-your-own-videos** platform (think private YouTube / PeerTube),
 not a downloader or archiver. Your media lives on your disk; nobody else's.
 
-> **Status: Milestone 1 complete.** First-run setup wizard, cookie-based auth
-> with Admin/Viewer roles, and the SPA-served-by-API foundation are in place.
-> Uploads, transcoding, playback, and Docker packaging land in M2–M5 (see
-> [Roadmap](#roadmap)).
+> **Status: Milestone 2 complete.** On top of M1 (setup wizard, cookie auth,
+> SPA-served-by-API), you can now perform **resumable (tus) uploads** from the
+> web UI, watch them process on a background queue (Hangfire), and see live
+> status in the library. Transcoding/playback, downloads, and Docker packaging
+> land in M3–M5 (see [Roadmap](#roadmap)).
 
 ---
 
@@ -22,9 +23,9 @@ not a downloader or archiver. Your media lives on your disk; nobody else's.
 | Backend | ASP.NET Core (.NET 10) Web API, controllers |
 | Database | EF Core — **SQLite by default**, SQL Server via connection string |
 | Auth | ASP.NET Core Identity, **cookie-based** (same-origin SPA), Admin/Viewer roles |
-| Background jobs | Hangfire (SQLite-backed) — *wired in M2* |
+| Background jobs | Hangfire (SQLite-backed), admin dashboard at `/hangfire` |
 | Media | ffmpeg / ffprobe via FFMpegCore, HLS renditions — *M3* |
-| Uploads | tus resumable protocol (tusdotnet / tus-js-client) — *M2* |
+| Uploads | tus resumable protocol (tusdotnet / tus-js-client) |
 | Frontend | Vite + React + TypeScript, TanStack Query, React Router, Tailwind |
 | Player | vidstack + hls.js — *M3* |
 | Packaging | Single container: API serves the built SPA (one origin, no CORS) — *M5* |
@@ -93,6 +94,12 @@ npm run dev
 Open **http://localhost:5173**. On a fresh database you'll land on the
 **first-run setup wizard**: create the admin account, name the site, choose a
 media path and transcoding mode, review, finish. You're then signed in as admin.
+
+Then click **Upload** (admin only), pick a video file, and start it — the upload
+is resumable (survives a page reload), and the new video appears in the library
+with a live **Processing → Ready** status. Background jobs run on Hangfire; admins
+can inspect the queue at **`/hangfire`**. (In M2 "processing" just marks the video
+ready; real ffmpeg work arrives in M3.)
 
 The SQLite database and data-protection keys are created under
 `src/Tubestead.Api/bin/Debug/net10.0/data/`. Delete that folder to start over
@@ -171,8 +178,9 @@ documented and wired up as part of the **M5** Docker packaging.
 - **M1 — Foundations ✅** Solution scaffold, EF Core + SQLite (provider
   abstraction), Identity cookie auth + roles, first-run setup wizard, SPA served
   by API.
-- **M2 — Uploads.** Resumable tus uploads with progress, storage layout, video
-  lifecycle + processing-status plumbing (Hangfire), reverse-proxy/base-URL config.
+- **M2 — Uploads ✅** Resumable tus uploads with progress, media storage layout,
+  video lifecycle + processing-status plumbing on Hangfire, admin-only library
+  management, larger-body/Kestrel config for uploads.
 - **M3 — Processing & playback.** ffmpeg metadata/thumbnail/faststart, async HLS
   renditions (original-only by default, optional hardware acceleration), vidstack
   player with seeking and quality switching.
