@@ -1,9 +1,13 @@
 using System.Text.Json.Serialization;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Tubestead.Api.Jobs;
+using Tubestead.Api.Uploads;
 using Tubestead.Infrastructure;
 using Tubestead.Infrastructure.Data;
+using tusdotnet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,16 @@ var dataPath = builder.Configuration["TUBESTEAD_DATA_PATH"];
 if (string.IsNullOrWhiteSpace(dataPath))
     dataPath = Path.Combine(AppContext.BaseDirectory, "data");
 Directory.CreateDirectory(dataPath);
+
+// tus buffers in-progress uploads on local disk; the completed file is moved to
+// media storage afterwards.
+var uploadTempPath = Path.Combine(dataPath, "uploads-temp");
+Directory.CreateDirectory(uploadTempPath);
+builder.Services.AddSingleton(new UploadStorageOptions(uploadTempPath));
+
+// Resumable uploads send large request bodies; the real cap is enforced by tus
+// (uploads.maxBytes setting), not Kestrel.
+builder.WebHost.ConfigureKestrel(o => o.Limits.MaxRequestBodySize = null);
 
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -39,6 +53,7 @@ builder.Services.AddDataProtection()
     .SetApplicationName("Tubestead");
 
 builder.Services.AddTubesteadInfrastructure(builder.Configuration);
+builder.AddTubesteadJobs(dataPath);
 
 // Cookie auth tuned for a same-origin SPA: return status codes, never redirect.
 builder.Services.ConfigureApplicationCookie(options =>
@@ -66,6 +81,19 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Resumable (tus) upload endpoint. Auth + validation are handled in the tus
+// event callbacks (admin-only, size/type checks).
+app.MapTus(TusUploads.RoutePath, TusUploads.ConfigureAsync);
+
+// Hangfire job dashboard (admin-only) — absent in the Testing environment.
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.MapHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization = [new AdminDashboardAuthorizationFilter()],
+    });
+}
 
 app.MapControllers();
 

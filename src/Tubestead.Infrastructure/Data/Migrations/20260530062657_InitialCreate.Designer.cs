@@ -11,7 +11,7 @@ using Tubestead.Infrastructure.Data;
 namespace Tubestead.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TubesteadDbContext))]
-    [Migration("20260530041717_InitialCreate")]
+    [Migration("20260530062657_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -140,8 +140,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("UpdatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");
@@ -157,8 +157,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Format")
                         .IsRequired()
@@ -200,8 +200,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -275,8 +275,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -313,8 +313,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("UpdatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("Width")
                         .HasColumnType("INTEGER");
@@ -370,8 +370,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedUtc")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DisplayName")
                         .HasColumnType("TEXT");
@@ -386,8 +386,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                    b.Property<long?>("LockoutEnd")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)

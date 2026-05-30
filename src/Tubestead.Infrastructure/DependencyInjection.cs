@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Tubestead.Domain;
 using Tubestead.Infrastructure.Data;
 using Tubestead.Infrastructure.Identity;
+using Tubestead.Infrastructure.Processing;
 using Tubestead.Infrastructure.Settings;
+using Tubestead.Infrastructure.Storage;
 
 namespace Tubestead.Infrastructure;
 
@@ -51,6 +53,8 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddScoped<ISettingsService, SettingsService>();
+        services.AddScoped<IStorageService, StorageService>();
+        services.AddScoped<IVideoProcessor, VideoProcessor>();
 
         return services;
     }

@@ -17,7 +17,7 @@ namespace Tubestead.Infrastructure.Data.Migrations
                 {
                     Key = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    UpdatedUtc = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,7 +44,7 @@ namespace Tubestead.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     DisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    CreatedUtc = table.Column<long>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -56,7 +56,7 @@ namespace Tubestead.Infrastructure.Data.Migrations
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnd = table.Column<long>(type: "INTEGER", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -73,7 +73,7 @@ namespace Tubestead.Infrastructure.Data.Migrations
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     OwnerId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedUtc = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,8 +110,8 @@ namespace Tubestead.Infrastructure.Data.Migrations
                     OriginalFileName = table.Column<string>(type: "TEXT", nullable: true),
                     OriginalSizeBytes = table.Column<long>(type: "INTEGER", nullable: true),
                     ThumbnailPath = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    UpdatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedUtc = table.Column<long>(type: "INTEGER", nullable: false),
+                    UpdatedUtc = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,7 +237,7 @@ namespace Tubestead.Infrastructure.Data.Migrations
                     Height = table.Column<int>(type: "INTEGER", nullable: true),
                     SizeBytes = table.Column<long>(type: "INTEGER", nullable: true),
                     IsOriginal = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedUtc = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

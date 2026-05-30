@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tubestead.Domain.Entities;
 using Tubestead.Infrastructure.Identity;
 
@@ -71,5 +72,27 @@ public class TubesteadDbContext(DbContextOptions<TubesteadDbContext> options)
                 .HasForeignKey(i => i.VideoId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        // SQLite can't compare/ORDER BY DateTimeOffset (stored as TEXT). Persist all
+        // DateTimeOffset values as UTC ticks (a sortable INTEGER) on that provider.
+        // SQL Server has native DateTimeOffset support, so leave it untouched there.
+        if (Database.IsSqlite())
+        {
+            var converter = new ValueConverter<DateTimeOffset, long>(
+                v => v.UtcTicks,
+                v => new DateTimeOffset(v, TimeSpan.Zero));
+            var nullableConverter = new ValueConverter<DateTimeOffset?, long?>(
+                v => v.HasValue ? v.Value.UtcTicks : null,
+                v => v.HasValue ? new DateTimeOffset(v.Value, TimeSpan.Zero) : null);
+
+            foreach (var entityType in b.Model.GetEntityTypes())
+                foreach (var prop in entityType.GetProperties())
+                {
+                    if (prop.ClrType == typeof(DateTimeOffset))
+                        prop.SetValueConverter(converter);
+                    else if (prop.ClrType == typeof(DateTimeOffset?))
+                        prop.SetValueConverter(nullableConverter);
+                }
+        }
     }
 }
