@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import SetupWizard from './pages/SetupWizard'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import VideoPage from './pages/VideoPage'
 
 export default function App() {
   const { data: status, isLoading, isError } = useAppStatus()
@@ -45,6 +46,7 @@ export default function App() {
     <Layout siteName={status.siteName} user={status.user}>
       <Routes>
         <Route path="/" element={<Home user={status.user} />} />
+        <Route path="/videos/:id" element={<VideoPage user={status.user} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

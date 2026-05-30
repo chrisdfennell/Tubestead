@@ -77,8 +77,44 @@ async function readError(res: Response): Promise<string> {
   return `Request failed (${res.status})`
 }
 
+export type VideoStatus = 'Uploading' | 'Processing' | 'Ready' | 'Failed'
+
+export interface VideoListItem {
+  id: string
+  title: string
+  status: VideoStatus
+  statusMessage: string | null
+  durationSeconds: number | null
+  thumbnailUrl: string | null
+  createdUtc: string
+}
+
+export interface Rendition {
+  id: string
+  label: string
+  format: string
+  width: number | null
+  height: number | null
+  sizeBytes: number | null
+  isOriginal: boolean
+}
+
+export interface VideoDetail extends VideoListItem {
+  description: string | null
+  width: number | null
+  height: number | null
+  originalFileName: string | null
+  renditions: Rendition[]
+}
+
 export const api = {
   status: () => request<AppStatus>('/auth/status'),
+  videos: {
+    list: (search?: string) =>
+      request<VideoListItem[]>(`/videos${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+    get: (id: string) => request<VideoDetail>(`/videos/${id}`),
+    remove: (id: string) => request<void>(`/videos/${id}`, { method: 'DELETE' }),
+  },
   setupDefaults: () => request<SetupDefaults>('/setup/defaults'),
   completeSetup: (payload: SetupPayload) =>
     request<CurrentUser>('/setup', { method: 'POST', body: JSON.stringify(payload) }),
