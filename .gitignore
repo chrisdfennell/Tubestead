@@ -21,8 +21,9 @@ dist/
 # ---- App data / media (never commit) ----
 /data/
 /media/
-**/wwwroot/app/
-**/wwwroot/index.html
+
+# ---- Built SPA output (emitted by `npm run build` into the API) ----
+src/Tubestead.Api/wwwroot/
 
 # ---- Secrets / env ----
 .env
