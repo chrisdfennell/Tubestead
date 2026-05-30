@@ -15,7 +15,7 @@ public class TubesteadApiFactory : WebApplicationFactory<Program>, IDisposable
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Directory.CreateDirectory(_root);
-        builder.UseEnvironment("Development");
+        builder.UseEnvironment("Testing");
         builder.UseSetting("TUBESTEAD_DATA_PATH", _root);
         builder.UseSetting("TUBESTEAD_DB_CONNECTION", $"Data Source={Path.Combine(_root, "test.db")}");
         builder.UseSetting("TUBESTEAD_MEDIA_PATH", MediaPath);
